@@ -1,9 +1,17 @@
 package com.hendisantika.springboots3uploaddemo.controller;
 
 import com.hendisantika.springboots3uploaddemo.service.AmazonS3ClientService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,7 +25,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/files")
 public class FileHandlerController {
+    private static final Logger logger = LoggerFactory.getLogger(FileHandlerController.class);
 
     @Autowired
     private AmazonS3ClientService amazonS3ClientService;
+
+    @PostMapping
+    public Map<String, String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
+        this.amazonS3ClientService.uploadFileToS3Bucket(file, true);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "file [" + file.getOriginalFilename() + "] uploading request submitted successfully.");
+
+        logger.info(
+                "file [" + file.getOriginalFilename() + "] uploading request submitted successfully.");
+        return response;
+    }
 }
