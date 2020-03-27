@@ -5,7 +5,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +36,29 @@ public class UploadController {
 
     @Value("${bucketName}")
     private String bucketName;
+
+    @PostMapping("/uploadFile")
+    public String uploadFile(@RequestPart(value = "file") MultipartFile multipartFile) {
+        String fileUrl = "";
+        String status = null;
+        try {
+            //converting multipart file to file
+            File file = convertMultiPartToFile(multipartFile);
+
+            //filename
+            String fileName = multipartFile.getOriginalFilename();
+
+            fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
+
+            status = uploadFileTos3bucket(fileName, file);
+
+            file.delete();
+
+        } catch (Exception e) {
+            return "UploadController().uploadFile().Exception : " + e.getMessage();
+        }
+        return status + " " + fileUrl;
+    }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
