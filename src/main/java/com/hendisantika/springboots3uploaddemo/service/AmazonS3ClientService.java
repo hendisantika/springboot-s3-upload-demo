@@ -6,6 +6,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,4 +67,12 @@ public class AmazonS3ClientService {
         }
     }
 
+    @Async
+    public void deleteFileFromS3Bucket(String fileName) {
+        try {
+            amazonS3.deleteObject(new DeleteObjectRequest(awsS3AudioBucket, fileName));
+        } catch (AmazonServiceException ex) {
+            logger.error("error [" + ex.getMessage() + "] occurred while removing [" + fileName + "] ");
+        }
+    }
 }
