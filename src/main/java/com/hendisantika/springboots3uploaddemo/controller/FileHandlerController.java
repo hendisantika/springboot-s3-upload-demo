@@ -4,8 +4,10 @@ import com.hendisantika.springboots3uploaddemo.service.AmazonS3ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +41,18 @@ public class FileHandlerController {
 
         logger.info(
                 "file [" + file.getOriginalFilename() + "] uploading request submitted successfully.");
+        return response;
+    }
+
+    @DeleteMapping
+    public Map<String, String> deleteFile(@RequestParam("filename") String fileName) {
+        this.amazonS3ClientService.deleteFileFromS3Bucket(fileName);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "file [" + fileName + "] removing request submitted successfully.");
+        logger.info(
+                "file [" + fileName + "] removing request submitted successfully.");
+
         return response;
     }
 }
