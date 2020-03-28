@@ -1,0 +1,6 @@
+cloud:
+  aws:
+    region.static: "[S3 Bucket region]"
+    credentials:
+      accessKey: "xxxxxxx"
+      secretKey: "xxxxxxx"
