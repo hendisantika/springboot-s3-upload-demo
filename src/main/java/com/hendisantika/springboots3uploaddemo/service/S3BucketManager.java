@@ -70,4 +70,14 @@ public class S3BucketManager {
         return amazonS3Client.getObject(bucketName, fileName);
     }
 
+    /**
+     * Deletes file from S3 bucket using amazon S3 client
+     *
+     * @param fileName
+     * @param bucketName
+     */
+    public void deleteFile(final String fileName, final String bucketName) {
+        amazonS3Client.deleteObject(bucketName, fileName);
+    }
+
 }
