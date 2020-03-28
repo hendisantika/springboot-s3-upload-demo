@@ -42,4 +42,9 @@ public class FileService {
                 ((WritableResource) this.resourceLoader.getResource(getLocation(id))).getOutputStream();
         FileCopyUtils.copy(createFile(id), outputStream);
     }
+
+    private byte[] createFile(final String id) {
+        String txt = "This file is created for the user," + id;
+        return txt.getBytes();
+    }
 }
