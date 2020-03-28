@@ -1,15 +1,20 @@
 package com.hendisantika.springboots3uploaddemo.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -78,6 +83,33 @@ public class S3BucketManager {
      */
     public void deleteFile(final String fileName, final String bucketName) {
         amazonS3Client.deleteObject(bucketName, fileName);
+    }
+
+    /**
+     * Downloads Image file as File Object
+     *
+     * @param fileName
+     * @return
+     */
+    public File downloadImage(final String fileName) {
+
+        try {
+            final S3Object s3Object = downloadFile(fileName, bucketName);
+            final S3ObjectInputStream inputStream = s3Object.getObjectContent();
+
+            byte[] bytes = null;
+            File file = new File(fileName);
+            try {
+                bytes = StreamUtils.copyToByteArray(inputStream);
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                fileOutputStream.write(bytes);
+            } catch (IOException e) {
+                /* Handle Exception */
+            }
+            return file;
+        } catch (AmazonS3Exception amazonS3Exception) {
+            throw amazonS3Exception;
+        }
     }
 
 }
