@@ -9,6 +9,8 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -107,6 +109,26 @@ public class S3BucketManager {
                 /* Handle Exception */
             }
             return file;
+        } catch (AmazonS3Exception amazonS3Exception) {
+            throw amazonS3Exception;
+        }
+    }
+
+    public ResponseEntity downloadImageAsResponseEntity(final String fileName) {
+
+        try {
+            final S3Object s3Object = downloadFile(fileName, bucketName);
+            final S3ObjectInputStream inputStream = s3Object.getObjectContent();
+
+            byte[] bytes = null;
+            try {
+                bytes = StreamUtils.copyToByteArray(inputStream);
+            } catch (IOException e) {
+                /* Handle Exception */
+            }
+
+            String contentType = s3Object.getObjectMetadata().getContentType();
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(bytes);
         } catch (AmazonS3Exception amazonS3Exception) {
             throw amazonS3Exception;
         }
