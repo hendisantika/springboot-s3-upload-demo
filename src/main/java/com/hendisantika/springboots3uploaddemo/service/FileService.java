@@ -2,8 +2,12 @@ package com.hendisantika.springboots3uploaddemo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+
+import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,4 +27,10 @@ public class FileService {
 
     @Value("${file.location}")
     private String location;
+
+    public byte[] getFile(final String id) throws IOException {
+        System.out.println("File to be accessed :: " + getLocation(id));
+        Resource resource = this.resourceLoader.getResource(getLocation(id));
+        return FileCopyUtils.copyToByteArray(resource.getInputStream());
+    }
 }
