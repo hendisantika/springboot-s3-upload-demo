@@ -47,4 +47,9 @@ public class FileService {
         String txt = "This file is created for the user," + id;
         return txt.getBytes();
     }
+
+    private String getLocation(final String id) {
+        //location/123.csv
+        return this.location + "/" + id + EXTENSION;
+    }
 }
