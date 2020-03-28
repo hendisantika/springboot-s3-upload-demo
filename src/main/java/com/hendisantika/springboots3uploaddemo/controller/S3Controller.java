@@ -37,4 +37,9 @@ public class S3Controller {
                 .header("Content-Disposition", "attachment; filename=" + id + ".csv")
                 .body(byteArrayResource);
     }
+
+    @GetMapping("put/{id}")
+    public void putFile(@PathVariable String id) throws IOException {
+        this.fileService.putFile(id);
+    }
 }
