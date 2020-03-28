@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.WritableResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,5 +34,12 @@ public class FileService {
         System.out.println("File to be accessed :: " + getLocation(id));
         Resource resource = this.resourceLoader.getResource(getLocation(id));
         return FileCopyUtils.copyToByteArray(resource.getInputStream());
+    }
+
+    public void putFile(final String id) throws IOException {
+        System.out.println("File to be placed :: " + getLocation(id));
+        OutputStream outputStream =
+                ((WritableResource) this.resourceLoader.getResource(getLocation(id))).getOutputStream();
+        FileCopyUtils.copy(createFile(id), outputStream);
     }
 }
