@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,17 @@ public class S3BucketManager {
         } catch (IOException e) {
 
         }
+    }
+
+    /**
+     * Downloads file from S3 bucket using amazon S3 client
+     *
+     * @param fileName
+     * @param bucketName
+     * @return
+     */
+    public S3Object downloadFile(final String fileName, final String bucketName) {
+        return amazonS3Client.getObject(bucketName, fileName);
     }
 
 }
