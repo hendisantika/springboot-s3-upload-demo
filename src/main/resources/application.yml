@@ -1,3 +1,11 @@
+#Application properties
+server:
+  port: 8080
+
+aws:
+  services:
+    bucket: ""
+
 cloud:
   aws:
     region.static: "[S3 Bucket region]"
